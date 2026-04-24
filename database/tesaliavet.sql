@@ -751,3 +751,209 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+-- ------------------------------------------------------------------
+-- TESALIAVET DB – DATOS DE PRUEBA
+-- ------------------------------------------------------------------
+SET FOREIGN_KEY_CHECKS = 0;
+SET UNIQUE_CHECKS = 0;
+
+-- -----------------------------------------------------
+-- roles
+-- -----------------------------------------------------
+INSERT INTO roles (id, name, description) VALUES
+(1, 'Admin', 'Acceso total al sistema'),
+(2, 'Veterinario', 'Atención médica y gestión de historiales'),
+(3, 'Cliente', 'Compra en tienda y gestión de mascotas'),
+(4, 'Cajero', 'Gestión de ventas y pagos'),
+(5, 'Farmacéutico', 'Control de inventario y productos');
+
+-- -----------------------------------------------------
+-- users
+-- -----------------------------------------------------
+INSERT INTO users (id, tipo_documento, numero_documento, first_name, last_name, email, password_hash, phone, direccion, ciudad, is_active) VALUES
+(1, 'CC', '1001', 'Admin', 'Sistema', 'admin@tesaliavet.com', '$2y$10$DUMMYHASHFORADMIN', '3001112233', 'Calle 1 #2-3', 'Bogotá', 1),
+(2, 'CC', '2002', 'Laura', 'Gómez', 'vet@tesaliavet.com', '$2y$10$DUMMYHASHFORVET', '3002223344', 'Carrera 4 #5-6', 'Medellín', 1),
+(3, 'CC', '3003', 'Juan', 'Pérez', 'juan.perez@example.com', '$2y$10$DUMMYHASHFORUSER', '3114455667', 'Cra 7 #8-9', 'Cali', 1),
+(4, 'CC', '4004', 'María', 'Gómez', 'maria.gomez@example.com', '$2y$10$DUMMYHASHFORUSER2', '3225566778', 'Av Siempre Viva #123', 'Bogotá', 1),
+(5, 'CC', '5005', 'Carlos', 'Rojas', 'cashier@tesaliavet.com', '$2y$10$DUMMYHASHFORCASH', '3336677889', 'Diagonal 10 #20-30', 'Cali', 1);
+
+-- -----------------------------------------------------
+-- user_roles
+-- -----------------------------------------------------
+INSERT INTO user_roles (user_id, role_id) VALUES
+(1, 1),  -- Admin
+(2, 2),  -- Veterinario
+(3, 3),  -- Cliente
+(4, 3),  -- Cliente
+(5, 4);  -- Cajero
+
+-- -----------------------------------------------------
+-- species
+-- -----------------------------------------------------
+INSERT INTO species (id, name) VALUES
+(1, 'Perro'),
+(2, 'Gato');
+
+-- -----------------------------------------------------
+-- breeds
+-- -----------------------------------------------------
+INSERT INTO breeds (id, species_id, name) VALUES
+(1, 1, 'Labrador'),
+(2, 1, 'Poodle'),
+(3, 2, 'Siamés'),
+(4, 2, 'Persa');
+
+-- -----------------------------------------------------
+-- pets
+-- -----------------------------------------------------
+INSERT INTO pets (id, owner_id, name, species_id, breed_id, gender, birth_date, weight, color, notes, is_active) VALUES
+(1, 3, 'Max', 1, 1, 'Macho', '2020-05-10', 25.50, 'Dorado', 'Muy juguetón', 1),
+(2, 4, 'Luna', 2, 3, 'Hembra', '2021-08-15', 4.20, 'Gris', 'Tímida', 1);
+
+-- -----------------------------------------------------
+-- medical_records
+-- -----------------------------------------------------
+INSERT INTO medical_records (id, pet_id, veterinarian_id, visit_date, symptoms, diagnosis, treatment, observations) VALUES
+(1, 1, 2, '2023-10-01 09:30:00', 'Tos seca y decaimiento', 'Bronquitis', 'Antibiótico por 7 días', 'Reposo absoluto'),
+(2, 2, 2, '2023-11-15 11:00:00', 'Vómito y pérdida de apetito', 'Gastroenteritis', 'Dieta blanda y probióticos', 'Mejoría en 48h');
+
+-- -----------------------------------------------------
+-- vaccines
+-- -----------------------------------------------------
+INSERT INTO vaccines (id, name, description) VALUES
+(1, 'Rabia', 'Vacuna antirrábica anual'),
+(2, 'Parvovirus', 'Core para perros'),
+(3, 'Triple Felina', 'Protege contra panleucopenia, herpes y calicivirus');
+
+-- -----------------------------------------------------
+-- pet_vaccinations
+-- -----------------------------------------------------
+INSERT INTO pet_vaccinations (id, pet_id, vaccine_id, application_date, next_due_date, batch_number, veterinarian_id) VALUES
+(1, 1, 1, '2023-01-15', '2024-01-15', 'LOT-123', 2),
+(2, 1, 2, '2023-03-10', '2024-03-10', 'LOT-456', 2),
+(3, 2, 3, '2023-06-20', '2024-06-20', 'LOT-789', 2);
+
+-- -----------------------------------------------------
+-- appointments
+-- -----------------------------------------------------
+INSERT INTO appointments (id, pet_id, owner_id, veterinarian_id, appointment_datetime, reason, status, notes) VALUES
+(1, 1, 3, 2, '2024-03-10 10:00:00', 'Revisión anual y vacunación', 'Confirmada', 'Traer carnet'),
+(2, 2, 4, 2, '2024-03-12 11:30:00', 'Control de peso', 'Pendiente', NULL);
+
+-- -----------------------------------------------------
+-- categories
+-- -----------------------------------------------------
+INSERT INTO categories (id, name, description, parent_id) VALUES
+(1, 'Medicamentos', 'Fármacos veterinarios', NULL),
+(2, 'Alimentos', 'Concentrados y snacks', NULL),
+(3, 'Accesorios', 'Juguetes, camas, collares', NULL),
+(4, 'Antiparasitarios', 'Pipetas y comprimidos', 1);
+
+-- -----------------------------------------------------
+-- products
+-- -----------------------------------------------------
+INSERT INTO products (id, category_id, sku, barcode, name, description, purchase_price, selling_price, stock, min_stock, tax_rate, is_active) VALUES
+(1, 1, 'MED-001', '7701234567890', 'Amoxicilina 500mg', 'Antibiótico de amplio espectro', 10.00, 25.00, 50, 10, 19.00, 1),
+(2, 2, 'ALI-001', '7709876543210', 'Concentrado Premium Perro Adulto', 'Alimento balanceado 15kg', 40.00, 70.00, 30, 5, 0.00, 1),
+(3, 3, 'ACC-001', '7701112223334', 'Collar Antipulgas', 'Collar repelente de 3 meses', 8.00, 15.00, 20, 5, 19.00, 1);
+
+-- -----------------------------------------------------
+-- product_images (opcional, se omite para brevedad)
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- stock_alerts (para producto con stock bajo)
+-- -----------------------------------------------------
+INSERT INTO stock_alerts (id, product_id, current_stock, min_stock, status) VALUES
+(1, 2, 3, 5, 'Activa');   -- Concentrado con stock por debajo del mínimo
+
+-- -----------------------------------------------------
+-- carts
+-- -----------------------------------------------------
+INSERT INTO carts (id, user_id, status) VALUES
+(1, 3, 'Activo');   -- Carrito activo de Juan Pérez
+
+-- -----------------------------------------------------
+-- cart_items
+-- -----------------------------------------------------
+INSERT INTO cart_items (id, cart_id, product_id, quantity, unit_price) VALUES
+(1, 1, 1, 2, 25.00);   -- 2 unidades de Amoxicilina
+
+-- -----------------------------------------------------
+-- suppliers
+-- -----------------------------------------------------
+INSERT INTO suppliers (id, name, document_type, document_number, primary_contact_name, primary_contact_phone, primary_contact_email, address, city) VALUES
+(1, 'Distribuidora Vet S.A.S', 'NIT', '901234567-1', 'Pedro López', '6012345678', 'pedro@vetdistribuye.com', 'Calle 100 #20-30', 'Bogotá'),
+(2, 'Alimentos SAS', 'NIT', '987654321-0', 'Ana Torres', '6018765432', 'compras@alimentossas.com', 'Cra 50 #10-80', 'Cali');
+
+-- -----------------------------------------------------
+-- purchase_orders
+-- -----------------------------------------------------
+INSERT INTO purchase_orders (id, supplier_id, created_by, order_date, expected_delivery_date, received_at, status, total_amount) VALUES
+(1, 1, 1, '2024-02-01 08:00:00', '2024-02-10', '2024-02-09 15:30:00', 'Recibida', 200.00);
+
+-- -----------------------------------------------------
+-- purchase_order_details
+-- -----------------------------------------------------
+INSERT INTO purchase_order_details (id, purchase_order_id, product_id, quantity_ordered, quantity_received, unit_cost) VALUES
+(1, 1, 1, 20, 20, 10.00);
+
+-- -----------------------------------------------------
+-- sales_orders
+-- -----------------------------------------------------
+INSERT INTO sales_orders (id, user_id, status, payment_method, shipping_name, shipping_phone, shipping_address, shipping_city, subtotal, tax_total, total, notes) VALUES
+(1, 3, 'Pagado', 'Tarjeta', 'Juan Pérez', '3114455667', 'Cra 7 #8-9', 'Cali', 50.00, 9.50, 59.50, 'Entregar en horario de oficina');
+
+-- -----------------------------------------------------
+-- sales_order_items
+-- -----------------------------------------------------
+INSERT INTO sales_order_items (id, order_id, product_id, quantity, unit_price, tax_rate) VALUES
+(1, 1, 1, 2, 25.00, 19.00);
+
+-- -----------------------------------------------------
+-- invoices
+-- -----------------------------------------------------
+INSERT INTO invoices (id, order_id, invoice_number, cufe, issue_date, client_name, client_document, client_doc_type, client_email, client_address, subtotal, tax_total, total, status, pdf_file, pdf_mime) VALUES
+(1, 1, 'INV-001', 'CUFE-ABCD1234', '2024-02-20 10:00:00', 'Juan Pérez', '3003', 'CC', 'juan.perez@example.com', 'Cra 7 #8-9', 50.00, 9.50, 59.50, 'Emitida', 'PDF_CONTENT_DUMMY', 'application/pdf');
+
+-- -----------------------------------------------------
+-- invoice_items
+-- -----------------------------------------------------
+INSERT INTO invoice_items (id, invoice_id, product_name, quantity, unit_price, tax_rate, subtotal, tax_amount, total) VALUES
+(1, 1, 'Amoxicilina 500mg', 2, 25.00, 19.00, 50.00, 9.50, 59.50);
+
+-- -----------------------------------------------------
+-- payments
+-- -----------------------------------------------------
+INSERT INTO payments (id, invoice_id, amount, payment_method, reference, paid_at, registered_by) VALUES
+(1, 1, 59.50, 'Tarjeta', 'TRX-123456', '2024-02-20 10:05:00', 5);
+
+-- -----------------------------------------------------
+-- supplier_products
+-- -----------------------------------------------------
+INSERT INTO supplier_products (id, supplier_id, product_id, supplier_sku, purchase_price, lead_time_days, is_preferred) VALUES
+(1, 1, 1, 'SUP-MED001', 9.50, 5, 1),
+(2, 2, 2, 'ALI-PRO-15', 38.00, 7, 1);
+
+-- -----------------------------------------------------
+-- notifications
+-- -----------------------------------------------------
+INSERT INTO notifications (id, user_id, type, title, message, is_read) VALUES
+(1, 3, 'Cita', 'Recordatorio de cita', 'Tiene una cita agendada para el 10 de marzo con su mascota Max', 0);
+
+-- -----------------------------------------------------
+-- system_alerts
+-- -----------------------------------------------------
+INSERT INTO system_alerts (id, type, title, message, is_resolved) VALUES
+(1, 'Stock Bajo', 'Stock crítico de Concentrado Premium', 'El producto Concentrado Premium (ID 2) tiene stock 3, mínimo 5', 0);
+
+-- -----------------------------------------------------
+-- pqrs
+-- -----------------------------------------------------
+INSERT INTO pqrs (id, user_id, sender_name, sender_email, sender_phone, type, subject, message, status) VALUES
+(1, 3, 'Juan Pérez', 'juan.perez@example.com', '3114455667', 'Queja', 'Demora en atención', 'Mi cita fue reprogramada sin previo aviso', 'Abierto');
+
+SET FOREIGN_KEY_CHECKS = 1;
+SET UNIQUE_CHECKS = 1;
